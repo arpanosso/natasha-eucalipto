@@ -1,0 +1,31 @@
+---
+output: github_document
+---
+
+# Análise Eucalipto
+
+## Carregando pacotes exigidos
+```{r, message=FALSE, error=FALSE, warning=FALSE}
+library(readxl)
+library(tidyverse)
+library(janitor)
+```
+
+## Entrada de Dados
+```{r}
+# Nutrientes
+nutrientes_planta <- read_excel("data/Acumulo de nutrientes - Compartimentos.xlsx") |> 
+  clean_names()
+head(nutrientes_planta)
+
+# Matéria Seca
+materia_seca <- read_excel("data/Materia seca - volume - altura - DAP.xlsx") |> 
+  clean_names()
+head(materia_seca)
+
+# solo 
+nutrientes_solo <- read_excel("data/teores de nutrientes no solo - 0-20.xlsx")|> 
+  clean_names()
+head(nutrientes_solo)
+```
+
