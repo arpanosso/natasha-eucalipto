@@ -29,3 +29,46 @@ nutrientes_solo <- read_excel("data/teores de nutrientes no solo - 0-20.xlsx")|>
 head(nutrientes_solo)
 ```
 
+### Operação de reunião do banco de dados
+```{r}
+materia_seca_solo <-left_join(x = materia_seca,
+          y = nutrientes_solo,
+          by=c("parcela","bloco", "n", "p","k"))
+```
+
+
+
+### Reunião do banco de dados com o arquivo de compartimento
+
+```{r}
+dados <- right_join(materia_seca_solo, nutrientes_planta,
+           by=c("parcela","bloco", "n", "p","k"))
+```
+
+
+```{r}
+exp_N <- 1:4
+exp_P <- c(1,5:7)
+exp_K <- c(1,8:10)
+
+dados |> 
+  filter(parcela %in% exp_N)
+
+dados |> 
+  filter(parcela %in% exp_P) 
+
+dados |> 
+  filter(parcela %in% exp_K)
+```
+
+
+
+
+
+
+
+
+
+
+
+

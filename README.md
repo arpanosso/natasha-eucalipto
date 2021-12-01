@@ -66,3 +66,97 @@ head(nutrientes_solo)
     ## 6 C           3     0     1     1        1    13   4     0.6     4     3    22
     ## # ... with 7 more variables: al <dbl>, sb <dbl>, ctc <dbl>, v <dbl>,
     ## #   ca_ctc <dbl>, mg_ctc <dbl>, m <dbl>
+
+### Operação de reunião do banco de dados
+
+``` r
+materia_seca_solo <-left_join(x = materia_seca,
+          y = nutrientes_solo,
+          by=c("parcela","bloco", "n", "p","k"))
+```
+
+### Reunião do banco de dados com o arquivo de compartimento
+
+``` r
+dados <- right_join(materia_seca_solo, nutrientes_planta,
+           by=c("parcela","bloco", "n", "p","k"))
+```
+
+``` r
+exp_N <- 1:4
+exp_P <- c(1,5:7)
+exp_K <- c(1,8:10)
+
+dados |> 
+  filter(parcela %in% exp_N)
+```
+
+    ## # A tibble: 64 x 38
+    ##    bloco parcela     n     p     k ms_folha ms_lenho ms_casca ms_galho altura
+    ##    <chr>   <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>    <dbl>    <dbl>  <dbl>
+    ##  1 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  2 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  3 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  4 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  5 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  6 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  7 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  8 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  9 C           2     1     1     1    1274.    8316.     770.    1391.   6   
+    ## 10 C           2     1     1     1    1274.    8316.     770.    1391.   6   
+    ## # ... with 54 more rows, and 28 more variables: dap <dbl>, volume <dbl>,
+    ## #   p_resina <dbl>, mo <dbl>, ph <dbl>, k_2.x <dbl>, ca.x <dbl>, mg.x <dbl>,
+    ## #   h_al <dbl>, al <dbl>, sb <dbl>, ctc <dbl>, v <dbl>, ca_ctc <dbl>,
+    ## #   mg_ctc <dbl>, m <dbl>, compartimento <chr>, n_2 <dbl>, p_2 <dbl>,
+    ## #   k_2.y <dbl>, ca.y <dbl>, mg.y <dbl>, s <dbl>, b <dbl>, cu <dbl>, fe <dbl>,
+    ## #   mn <dbl>, zn <dbl>
+
+``` r
+dados |> 
+  filter(parcela %in% exp_P) 
+```
+
+    ## # A tibble: 64 x 38
+    ##    bloco parcela     n     p     k ms_folha ms_lenho ms_casca ms_galho altura
+    ##    <chr>   <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>    <dbl>    <dbl>  <dbl>
+    ##  1 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  2 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  3 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  4 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  5 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  6 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  7 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  8 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  9 C           5     1     1     1    1576.   11029.    1111.    1237.   7.2 
+    ## 10 C           5     1     1     1    1576.   11029.    1111.    1237.   7.2 
+    ## # ... with 54 more rows, and 28 more variables: dap <dbl>, volume <dbl>,
+    ## #   p_resina <dbl>, mo <dbl>, ph <dbl>, k_2.x <dbl>, ca.x <dbl>, mg.x <dbl>,
+    ## #   h_al <dbl>, al <dbl>, sb <dbl>, ctc <dbl>, v <dbl>, ca_ctc <dbl>,
+    ## #   mg_ctc <dbl>, m <dbl>, compartimento <chr>, n_2 <dbl>, p_2 <dbl>,
+    ## #   k_2.y <dbl>, ca.y <dbl>, mg.y <dbl>, s <dbl>, b <dbl>, cu <dbl>, fe <dbl>,
+    ## #   mn <dbl>, zn <dbl>
+
+``` r
+dados |> 
+  filter(parcela %in% exp_K)
+```
+
+    ## # A tibble: 64 x 38
+    ##    bloco parcela     n     p     k ms_folha ms_lenho ms_casca ms_galho altura
+    ##    <chr>   <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>    <dbl>    <dbl>  <dbl>
+    ##  1 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  2 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  3 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  4 C           1     1     1     1    1589.   12183.     730.    1318.   6.95
+    ##  5 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  6 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  7 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  8 C           1     1     0     1    1945.   12020.    1319.    1915.   7.7 
+    ##  9 C           8     1     1     1    1276.    6750.     741.    2139.   5.3 
+    ## 10 C           8     1     1     1    1276.    6750.     741.    2139.   5.3 
+    ## # ... with 54 more rows, and 28 more variables: dap <dbl>, volume <dbl>,
+    ## #   p_resina <dbl>, mo <dbl>, ph <dbl>, k_2.x <dbl>, ca.x <dbl>, mg.x <dbl>,
+    ## #   h_al <dbl>, al <dbl>, sb <dbl>, ctc <dbl>, v <dbl>, ca_ctc <dbl>,
+    ## #   mg_ctc <dbl>, m <dbl>, compartimento <chr>, n_2 <dbl>, p_2 <dbl>,
+    ## #   k_2.y <dbl>, ca.y <dbl>, mg.y <dbl>, s <dbl>, b <dbl>, cu <dbl>, fe <dbl>,
+    ## #   mn <dbl>, zn <dbl>
