@@ -9,6 +9,7 @@ output: github_document
 library(readxl)
 library(tidyverse)
 library(janitor)
+library(skimr)
 ```
 
 ## Entrada de Dados
@@ -40,35 +41,184 @@ materia_seca_solo <-left_join(x = materia_seca,
 
 ### Reunião do banco de dados com o arquivo de compartimento
 
+Note que foram adicionadas as doses para os respectivos tratamentos (parcelas)
+
 ```{r}
 dados <- right_join(materia_seca_solo, nutrientes_planta,
-           by=c("parcela","bloco", "n", "p","k"))
+           by=c("parcela","bloco", "n", "p","k")) |> 
+  mutate(
+    Dose_N = case_when(
+    parcela == 2 ~ 0,
+    parcela == 3 ~ 70,
+    parcela == 4 ~ 105,
+    TRUE ~ 140),
+    
+    Dose_P = case_when(
+    parcela == 5 ~ 0,
+    parcela == 6 ~ 40,
+    parcela == 7 ~ 100,
+    TRUE ~ 70),
+    
+    Dose_K = case_when(
+    parcela == 8 ~ 0,
+    parcela == 9 ~ 90,
+    parcela == 10 ~ 135,
+    TRUE ~ 180)
+
+  )
+
+write.table(dados,"data/dados.txt",row.names = FALSE, quote = FALSE, sep = "\t")
 ```
 
+### Vamos separar os experimentos
 
 ```{r}
 exp_N <- 1:4
 exp_P <- c(1,5:7)
 exp_K <- c(1,8:10)
 
-dados |> 
+expN <- dados |> 
   filter(parcela %in% exp_N)
 
-dados |> 
+expP <- dados |> 
   filter(parcela %in% exp_P) 
 
-dados |> 
+expK <- dados |> 
   filter(parcela %in% exp_K)
 ```
 
 
+## Estatística Descritiva - N
+
+```{r}
+skim(expN)
+```
 
 
+## Estatística Descritiva - P
+
+```{r}
+skim(expP)
+```
 
 
+## Estatística Descritiva - K
+
+```{r}
+skim(expK)
+```
 
 
+### Análise de Correlação entre grupos de variáveis de N.
+```{r}
+da<-expN
+cor(da[6:12],da[13:26]) |> 
+  corrplot::corrplot()
+```
+#### Compartimento FOLHA:
+```{r}
+da<-expN |> 
+  filter(compartimento == "FOLHA")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
+#### Compartimento LENHO:
+```{r}
+da<-expN |> 
+  filter(compartimento == "LENHO")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
 
 
+#### Compartimento GALHO:
+```{r}
+da<-expN |> 
+  filter(compartimento == "GALHO")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
+
+#### Compartimento CASCA:
+```{r}
+da<-expN |> 
+  filter(compartimento == "CASCA")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
+
+### Análise de Correlação entre grupos de variáveis de P.
+```{r}
+da<-expP
+cor(da[6:12],da[13:26]) |> 
+  corrplot::corrplot()
+```
+#### Compartimento FOLHA:
+```{r}
+da<-expP |> 
+  filter(compartimento == "FOLHA")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
+#### Compartimento LENHO:
+```{r}
+da<-expP |> 
+  filter(compartimento == "LENHO")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
 
 
+#### Compartimento GALHO:
+```{r}
+da<-expP |> 
+  filter(compartimento == "GALHO")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
+
+#### Compartimento CASCA:
+```{r}
+da<-expP |> 
+  filter(compartimento == "CASCA")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
+
+### Análise de Correlação entre grupos de variáveis de K.
+```{r}
+da<-expK
+cor(da[6:12],da[13:26]) |> 
+  corrplot::corrplot()
+```
+#### Compartimento FOLHA:
+```{r}
+da<-expK |> 
+  filter(compartimento == "FOLHA")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
+#### Compartimento LENHO:
+```{r}
+da<-expK |> 
+  filter(compartimento == "LENHO")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
+
+
+#### Compartimento GALHO:
+```{r}
+da<-expK |> 
+  filter(compartimento == "GALHO")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
+
+#### Compartimento CASCA:
+```{r}
+da<-expK |> 
+  filter(compartimento == "CASCA")
+cor(da[28:38],da[6:26]) |> 
+  corrplot::corrplot()
+```
