@@ -1,4 +1,6 @@
 
+### [PCA exp\_P](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_Phtml)
+
 # Análise Eucalipto
 
 ## Carregando pacotes exigidos

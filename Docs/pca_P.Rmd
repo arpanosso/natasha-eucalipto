@@ -1,0 +1,408 @@
+## Carregando pacotes exigidos
+```{r, message=FALSE, error=FALSE, warning=FALSE}
+library(readxl)
+library(tidyverse)
+library(janitor)
+library(skimr)
+library(vegan)
+library(corrplot)
+library(plotrix)
+```
+
+## Entrada de Dados
+```{r}
+dados <- read.table("../data/dados.txt",h=TRUE)
+```
+
+### Vamos separar os experimentos
+
+```{r}
+exp_P <- c(1,5:7)
+expP <- dados |> 
+  filter(parcela %in% exp_P) 
+```
+
+
+
+### Análise de componentes principais FOLHA
+
+```{r}
+da_p <- expP %>% 
+  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, p_2) %>% 
+  filter(compartimento != "LENHO",
+         compartimento == "FOLHA")
+```
+
+```{r}
+# Análise de Componentes Principais
+pca <- prcomp(da_p[-(1:2)],scale. = TRUE)
+summary(pca)
+```
+
+```{r}
+# Extraindo os autovalores
+eig <- pca$sdev^2
+round(eig,3)
+```
+
+
+```{r}
+# Variância Explicada
+ve<-eig/sum(eig)
+ve
+```
+
+
+```{r}
+# Variância Explicada acumulada
+cumsum(ve)
+```
+
+
+```{r}
+# Estudar a contribuição de cada variável na componente
+# principal
+mc <- cor(da_p[-(1:2)], pca$x)
+corrplot::corrplot(mc)
+```
+
+Basicamente nesse gráfico podemos observar que a componente principal 1 (PC1)dos [ms dap e p_2 (casca)] contrário [altura] na PC2 observamos uma ação conjunta entre p_resina, dap e ms_casca já em PC3 temos um contraste entre [ms_casca altura] vs [v]
+
+```{r}
+# Screeplot
+screeplot(pca)
+abline(h=1)
+```
+As CP com informação relevante são aquelas com "Inertia" maior que 01.
+
+```{r}
+#Biplot
+da <- da_p[-c(1:2)]
+grupos <- da_p$parcela
+pc1V<-cor(da,pca$x)[,1]/sd(cor(da,pca$x)[,1])
+pc2V<-cor(da,pca$x)[,2]/sd(cor(da,pca$x)[,2])
+pc1c<-pca$x[,1]/sd(pca$x[,1])
+pc2c<-pca$x[,2]/sd(pca$x[,2])
+nv<-ncol(da) # número de variáveis utilizadas na análise
+plot(pc1V,pc2V,
+     xlim=c(min(-3,pc1V,pc1c),
+            max(pc1V,pc1c,5)),
+     ylim=c(min(pc2V,pc2c),
+            max(pc2V,pc2c)),pch="",las=1,
+     xlab=paste("PC1 (",round(100*ve[1],2),"%)",sep=""),
+     ylab=paste("PC2 (",round(100*ve[2],2),"%)",sep=""),
+     font.lab=2)
+abline(v=0,h=0)
+arrows(rep(0,nv),rep(0,nv),pc1V*.90,pc2V*.90,lwd=1.5,length=.1)
+text(pc1V,pc2V,names(pc1V),font=4)
+lv<-as.factor(grupos);nlv<-levels(lv)
+
+# Adicionando os identificadores dos acesso partir de uma variável categórica
+for(i in 1:length(nlv)){
+  ff<-lv==nlv[i]  
+  # points(pc1c[ff],pc2c[ff],cex=1.3,col=i,pch=i+15) 
+  # df$Municípios[ff]
+  text(pc1c[ff],pc2c[ff],grupos[ff],cex=.8,col=i)}
+```
+Gráfico Biplot
+
+```{r}
+## tabela
+# Tabela do Biplot com as correlações com as PCs e seus respectivos autovetores
+ck<-sum(pca$sdev^2>=1)
+tabelapca<-vector()
+for( l in 1:ck) tabelapca<-cbind(tabelapca,mc[,l])#,pca$rotation[,l])
+colnames(tabelapca)<-paste(rep(c("PC"),ck),1:ck,sep="")
+pcat<-round(tabelapca,3)
+summary(pcat)
+tabelapca<-tabelapca[order(abs(tabelapca[,1])),]
+tabelapca
+```
+
+
+
+### Análise de componentes principais CASCA
+
+```{r}
+da_p <- expP %>% 
+  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, p_2) %>% 
+  filter(compartimento != "LENHO",
+         compartimento == "CASCA")
+```
+
+```{r}
+# Análise de Componentes Principais
+pca <- prcomp(da_p[-(1:2)],scale. = TRUE)
+summary(pca)
+```
+
+```{r}
+# Extraindo os autovalores
+eig <- pca$sdev^2
+round(eig,3)
+```
+
+
+```{r}
+# Variância Explicada
+ve<-eig/sum(eig)
+ve
+```
+
+
+```{r}
+# Variância Explicada acumulada
+cumsum(ve)
+```
+
+
+```{r}
+# Estudar a contribuição de cada variável na componente
+# principal
+mc <- cor(da_p[-(1:2)], pca$x)
+corrplot::corrplot(mc)
+```
+
+...
+
+```{r}
+# Screeplot
+screeplot(pca)
+abline(h=1)
+```
+As CP com informação relevante são aquelas com "Inertia" maior que 01.
+
+```{r}
+#Biplot
+da <- da_p[-c(1:2)]
+grupos <- da_p$parcela
+pc1V<-cor(da,pca$x)[,1]/sd(cor(da,pca$x)[,1])
+pc2V<-cor(da,pca$x)[,2]/sd(cor(da,pca$x)[,2])
+pc1c<-pca$x[,1]/sd(pca$x[,1])
+pc2c<-pca$x[,2]/sd(pca$x[,2])
+nv<-ncol(da) # número de variáveis utilizadas na análise
+plot(pc1V,pc2V,
+     xlim=c(min(-3,pc1V,pc1c),
+            max(pc1V,pc1c,5)),
+     ylim=c(min(pc2V,pc2c),
+            max(pc2V,pc2c)),pch="",las=1,
+     xlab=paste("PC1 (",round(100*ve[1],2),"%)",sep=""),
+     ylab=paste("PC2 (",round(100*ve[2],2),"%)",sep=""),
+     font.lab=2)
+abline(v=0,h=0)
+arrows(rep(0,nv),rep(0,nv),pc1V*.90,pc2V*.90,lwd=1.5,length=.1)
+text(pc1V,pc2V,names(pc1V),font=4)
+lv<-as.factor(grupos);nlv<-levels(lv)
+
+# Adicionando os identificadores dos acesso partir de uma variável categórica
+for(i in 1:length(nlv)){
+  ff<-lv==nlv[i]  
+  # points(pc1c[ff],pc2c[ff],cex=1.3,col=i,pch=i+15) 
+  # df$Municípios[ff]
+  text(pc1c[ff],pc2c[ff],grupos[ff],cex=.8,col=i)}
+```
+Gráfico Biplot
+
+```{r}
+## tabela
+# Tabela do Biplot com as correlações com as PCs e seus respectivos autovetores
+ck<-sum(pca$sdev^2>=1)
+tabelapca<-vector()
+for( l in 1:ck) tabelapca<-cbind(tabelapca,mc[,l])#,pca$rotation[,l])
+colnames(tabelapca)<-paste(rep(c("PC"),ck),1:ck,sep="")
+pcat<-round(tabelapca,3)
+summary(pcat)
+tabelapca<-tabelapca[order(abs(tabelapca[,1])),]
+tabelapca
+```
+
+
+### Análise de componentes principais GALHO
+
+```{r}
+da_p <- expP %>% 
+  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, p_2) %>% 
+  filter(compartimento != "LENHO",
+         compartimento == "GALHO")
+```
+
+```{r}
+# Análise de Componentes Principais
+pca <- prcomp(da_p[-(1:2)],scale. = TRUE)
+summary(pca)
+```
+
+```{r}
+# Extraindo os autovalores
+eig <- pca$sdev^2
+round(eig,3)
+```
+
+
+```{r}
+# Variância Explicada
+ve<-eig/sum(eig)
+ve
+```
+
+
+```{r}
+# Variância Explicada acumulada
+cumsum(ve)
+```
+
+
+```{r}
+# Estudar a contribuição de cada variável na componente
+# principal
+mc <- cor(da_p[-(1:2)], pca$x)
+corrplot::corrplot(mc)
+```
+
+...
+
+```{r}
+# Screeplot
+screeplot(pca)
+abline(h=1)
+```
+As CP com informação relevante são aquelas com "Inertia" maior que 01.
+
+```{r}
+#Biplot
+da <- da_p[-c(1:2)]
+grupos <- da_p$parcela
+pc1V<-cor(da,pca$x)[,1]/sd(cor(da,pca$x)[,1])
+pc2V<-cor(da,pca$x)[,2]/sd(cor(da,pca$x)[,2])
+pc1c<-pca$x[,1]/sd(pca$x[,1])
+pc2c<-pca$x[,2]/sd(pca$x[,2])
+nv<-ncol(da) # número de variáveis utilizadas na análise
+plot(pc1V,pc2V,
+     xlim=c(min(-3,pc1V,pc1c),
+            max(pc1V,pc1c,5)),
+     ylim=c(min(pc2V,pc2c),
+            max(pc2V,pc2c)),pch="",las=1,
+     xlab=paste("PC1 (",round(100*ve[1],2),"%)",sep=""),
+     ylab=paste("PC2 (",round(100*ve[2],2),"%)",sep=""),
+     font.lab=2)
+abline(v=0,h=0)
+arrows(rep(0,nv),rep(0,nv),pc1V*.90,pc2V*.90,lwd=1.5,length=.1)
+text(pc1V,pc2V,names(pc1V),font=4)
+lv<-as.factor(grupos);nlv<-levels(lv)
+
+# Adicionando os identificadores dos acesso partir de uma variável categórica
+for(i in 1:length(nlv)){
+  ff<-lv==nlv[i]  
+  # points(pc1c[ff],pc2c[ff],cex=1.3,col=i,pch=i+15) 
+  # df$Municípios[ff]
+  text(pc1c[ff],pc2c[ff],grupos[ff],cex=.8,col=i)}
+```
+Gráfico Biplot
+
+```{r}
+## tabela
+# Tabela do Biplot com as correlações com as PCs e seus respectivos autovetores
+ck<-sum(pca$sdev^2>=1)
+tabelapca<-vector()
+for( l in 1:ck) tabelapca<-cbind(tabelapca,mc[,l])#,pca$rotation[,l])
+colnames(tabelapca)<-paste(rep(c("PC"),ck),1:ck,sep="")
+pcat<-round(tabelapca,3)
+summary(pcat)
+tabelapca<-tabelapca[order(abs(tabelapca[,1])),]
+tabelapca
+```
+
+### Análise de Componente Principal com GALHO, FOLHA e CASCA
+
+
+```{r}
+da_p <- expP %>% 
+  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, p_2) %>% 
+  filter(compartimento != "LENHO")
+```
+
+```{r}
+# Análise de Componentes Principais
+pca <- prcomp(da_p[-(1:2)],scale. = TRUE)
+summary(pca)
+```
+
+```{r}
+# Extraindo os autovalores
+eig <- pca$sdev^2
+round(eig,3)
+```
+
+
+```{r}
+# Variância Explicada
+ve<-eig/sum(eig)
+ve
+```
+
+
+```{r}
+# Variância Explicada acumulada
+cumsum(ve)
+```
+
+
+```{r}
+# Estudar a contribuição de cada variável na componente
+# principal
+mc <- cor(da_p[-(1:2)], pca$x)
+corrplot::corrplot(mc)
+```
+
+...
+
+```{r}
+# Screeplot
+screeplot(pca)
+abline(h=1)
+```
+As CP com informação relevante são aquelas com "Inertia" maior que 01.
+
+```{r}
+#Biplot
+da <- da_p[-c(1:2)]
+grupos <- da_p$parcela
+pc1V<-cor(da,pca$x)[,1]/sd(cor(da,pca$x)[,1])
+pc2V<-cor(da,pca$x)[,2]/sd(cor(da,pca$x)[,2])
+pc1c<-pca$x[,1]/sd(pca$x[,1])
+pc2c<-pca$x[,2]/sd(pca$x[,2])
+nv<-ncol(da) # número de variáveis utilizadas na análise
+plot(pc1V,pc2V,
+     xlim=c(min(-3,pc1V,pc1c),
+            max(pc1V,pc1c,5)),
+     ylim=c(min(pc2V,pc2c),
+            max(pc2V,pc2c)),pch="",las=1,
+     xlab=paste("PC1 (",round(100*ve[1],2),"%)",sep=""),
+     ylab=paste("PC2 (",round(100*ve[2],2),"%)",sep=""),
+     font.lab=2)
+abline(v=0,h=0)
+arrows(rep(0,nv),rep(0,nv),pc1V*.90,pc2V*.90,lwd=1.5,length=.1)
+text(pc1V,pc2V,names(pc1V),font=4)
+lv<-as.factor(grupos);nlv<-levels(lv)
+
+# Adicionando os identificadores dos acesso partir de uma variável categórica
+for(i in 1:length(nlv)){
+  ff<-lv==nlv[i]  
+  # points(pc1c[ff],pc2c[ff],cex=1.3,col=i,pch=i+15) 
+  # df$Municípios[ff]
+  text(pc1c[ff],pc2c[ff],grupos[ff],cex=.8,col=i)}
+```
+Gráfico Biplot
+
+```{r}
+## tabela
+# Tabela do Biplot com as correlações com as PCs e seus respectivos autovetores
+ck<-sum(pca$sdev^2>=1)
+tabelapca<-vector()
+for( l in 1:ck) tabelapca<-cbind(tabelapca,mc[,l])#,pca$rotation[,l])
+colnames(tabelapca)<-paste(rep(c("PC"),ck),1:ck,sep="")
+pcat<-round(tabelapca,3)
+summary(pcat)
+tabelapca<-tabelapca[order(abs(tabelapca[,1])),]
+tabelapca
+```
