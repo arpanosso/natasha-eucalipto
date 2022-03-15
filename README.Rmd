@@ -2,7 +2,7 @@
 output: github_document
 ---
 
-### [PCA exp_P](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_Phtml)
+### [PCA exp_P](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_P.html)
 
 # Análise Eucalipto
 

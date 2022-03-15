@@ -1,5 +1,5 @@
 
-### [PCA exp\_P](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_Phtml)
+### [PCA exp\_P](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_P.html)
 
 # Análise Eucalipto
 
