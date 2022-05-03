@@ -4,6 +4,10 @@ output: github_document
 
 ### [PCA exp_P](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_P.html)
 
+### [PCA exp_K](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_K.html)
+
+### [PCA exp_N](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_N.html)
+
 # Análise Eucalipto
 
 ## Carregando pacotes exigidos

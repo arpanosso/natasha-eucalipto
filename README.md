@@ -1,6 +1,10 @@
 
 ### [PCA exp\_P](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_P.html)
 
+### [PCA exp\_K](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_K.html)
+
+### [PCA exp\_N](https://arpanosso.github.io/natasha-eucalipto/Docs/pca_N.html)
+
 # Análise Eucalipto
 
 ## Carregando pacotes exigidos
