@@ -28,7 +28,7 @@ expK <- dados |>
 
 ```{r}
 da_k <- expK %>% 
-  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, p_2) %>% 
+  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, k_2) %>% 
   filter(compartimento != "LENHO",
          compartimento == "FOLHA")
 ```
@@ -66,7 +66,7 @@ mc <- cor(da_k[-(1:2)], pca$x)
 corrplot::corrplot(mc)
 ```
 
-Basicamente nesse gráfico podemos observar que a componente principal 1 (PC1)dos [ms dap e p_2 (casca)] contrário [altura] na PC2 observamos uma ação conjunta entre p_resina, dap e ms_casca já em PC3 temos um contraste entre [ms_casca altura] vs [v]
+Basicamente nesse gráfico podemos observar que a componente principal 1 (PC1)dos [ms dap e k_2 (casca)] contrário [altura] na PC2 observamos uma ação conjunta entre p_resina, dap e ms_casca já em PC3 temos um contraste entre [ms_casca altura] vs [v]
 
 ```{r}
 # Screeplot
@@ -125,7 +125,7 @@ tabelapca
 
 ```{r}
 da_k <- expK %>% 
-  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, p_2) %>% 
+  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, k_2) %>% 
   filter(compartimento != "LENHO",
          compartimento == "CASCA")
 ```
@@ -221,7 +221,7 @@ tabelapca
 
 ```{r}
 da_k <- expK %>% 
-  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, p_2) %>% 
+  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, k_2) %>% 
   filter(compartimento != "LENHO",
          compartimento == "GALHO")
 ```
@@ -317,7 +317,7 @@ tabelapca
 
 ```{r}
 da_k <- expK %>% 
-  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, p_2) %>% 
+  select(parcela,compartimento, ms_folha, ms_galho, ms_casca, altura, dap, p_resina, v, k_2) %>% 
   filter(compartimento != "LENHO")
 ```
 
